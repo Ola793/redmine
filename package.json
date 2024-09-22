@@ -1,0 +1,16 @@
+{
+  "name": "redmine.org",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Olha Teplova",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.5.5",
+    "dotenv": "^16.4.5"
+  }
+}
