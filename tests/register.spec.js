@@ -7,7 +7,7 @@ import { HomePage } from "./pages/home.page";
 import { LoginPage } from "./pages/login.page";
 import { RegisterPage } from "./pages/register.page";
 
-test.describe.skip("Register check", async () => {
+test.describe("Register check", async () => {
   let homePage;
   let loginPage;
   let registerPage;

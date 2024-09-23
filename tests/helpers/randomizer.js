@@ -44,4 +44,4 @@ const randomizer = {
     }
   };
   
-  export default randomizer;
+export default randomizer;
