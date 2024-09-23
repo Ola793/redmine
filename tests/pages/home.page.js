@@ -11,6 +11,9 @@ export class HomePage {
     this.signOutLink = page.locator("a[href='/logout']");
     
     this.registerLink = page.locator("a[href='/account/register']");
+
+    this.searchInput = page.locator("#q");
+    this.searchButton = page.locator("");
   }
     
   async goto() {

@@ -24,11 +24,11 @@ const randomizer = {
     },
 
     randomLogin() {
-        return this.randomName();
+      return this.randomName();
     },
 
     randomPassword() {
-        return `${this.randomName()}${this.randomNumber()}`.length >= 8 ? `${this.randomName()}${this.randomNumber()}` : this.randomPassword();
+      return `${this.randomName()}${this.randomNumber()}`.length >= 8 ? `${this.randomName()}${this.randomNumber()}` : this.randomPassword();
     },
   
     randomEmail() {
@@ -38,6 +38,10 @@ const randomizer = {
     randomNumber() {
       return Math.floor(Math.random() * 26);
     },
+
+    randomWord() {
+      return this.randomName();
+    }
   };
   
   export default randomizer;

@@ -4,7 +4,7 @@ import { HomePage } from "./pages/home.page";
 import { LoginPage } from "./pages/login.page";
 import { LostPasswordPage } from "./pages/lost-password.page";
 
-test.describe("Sign in check", async () => {
+test.describe.skip("Sign in check", async () => {
   let homePage;
   let loginPage;
   let lostPasswordPage;

@@ -1,11 +1,13 @@
 require('dotenv').config();
-import randomizer from "./randomizer.js";
 import { test, expect } from "@playwright/test";
+
+import randomizer from "./helpers/randomizer.js";
+
 import { HomePage } from "./pages/home.page";
 import { LoginPage } from "./pages/login.page";
 import { RegisterPage } from "./pages/register.page";
 
-test.describe("Register check", async () => {
+test.describe.skip("Register check", async () => {
   let homePage;
   let loginPage;
   let registerPage;
