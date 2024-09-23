@@ -1,10 +1,8 @@
 require('dotenv').config();
 import { test, expect } from "@playwright/test";
-
-import randomizer from "./helpers/randomizer.js";
-
 import { HomePage } from "./pages/home.page";
 import { SearchPage } from "./pages/search.page";
+import randomizer from "./helpers/randomizer.js";
 
 test.describe("Search check", async () => {
   let homePage;
