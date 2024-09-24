@@ -51,20 +51,24 @@ jobs:
           echo "Cannot generate report, allure-results not found."
         fi
 
-    # Debug step to check the allure-report directory before the Git command
-    - name: Debug Allure Report Directory
-      run: |
-        if [ -d allure-report ]; then
-          echo "allure-report directory exists. Listing contents:"
-          ls -la allure-report
-        else
-          echo "allure-report directory not found!"
-        fi
+    # Save Allure report as artifact to avoid loss during branch switching
+    - name: Save Allure Report as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-report
+        path: allure-report
 
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
       with:
         ref: gh-pages
+
+    # Restore the Allure report from artifact
+    - name: Download Allure Report Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: allure-report
+        path: ./allure-report
 
     # Copy the Allure report to the gh-pages branch
     - name: Copy Allure Report to gh-pages
