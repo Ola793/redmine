@@ -35,6 +35,7 @@ jobs:
         fi
 
     - name: Generate Allure Report
+      if: always()
       run: npm run gen:report
       env:
         LOGIN: ${{ secrets.LOGIN }}
