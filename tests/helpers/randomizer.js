@@ -28,7 +28,9 @@ const randomizer = {
     },
 
     randomPassword() {
-      return `${this.randomName()}${this.randomNumber()}`.length >= 8 ? `${this.randomName()}${this.randomNumber()}` : this.randomPassword();
+      const password = `${this.randomName()}${this.randomNumber()}`;
+      
+      return password.length >= 8 ? password : this.randomPassword();
     },
   
     randomEmail() {
