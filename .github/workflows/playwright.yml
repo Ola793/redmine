@@ -5,40 +5,52 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
+
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+
     - name: Install dependencies
       run: npm ci
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
     - name: Run Playwright tests
       run: npm test
+
     - name: Copy Allure Data from Previous Runs
       run: |
+        mkdir -p allure-results/previous/
         if [ -d allure-results ]; then
           cp -r allure-results/* allure-results/previous/ || echo "No previous allure results to copy."
         fi
+
     - name: Generate Allure Report
       run: npm run gen:report
       env:
         LOGIN: ${{ secrets.LOGIN }}
         PASSWORD: ${{ secrets.PASSWORD }}
         EMAIL: ${{ secrets.EMAIL }}
+
     - name: Checkout target branch
-      run: |
-        git fetch origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages
-        git checkout gh-pages
-    - name: Copy Allure Report
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+
+    - name: Copy Allure Report to gh-pages branch
       run: |
         rm -rf ./allure-report/*
         cp -r allure-report/* ./allure-report/
+
     - name: Commit and Push Allure Report
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +60,6 @@ jobs:
         git add allure-report/
         git commit -m "Update Allure report" || echo "No changes to commit"
         git push origin gh-pages
-    - name: Set up GitHub Pages
-      run: |
-        echo "GitHub Pages has been set up for branch 'gh-pages'."
-       
+
+    - name: Confirm GitHub Pages Setup
+      run: echo "GitHub Pages is set up on the 'gh-pages' branch."
