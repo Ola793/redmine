@@ -39,10 +39,13 @@ jobs:
         sudo mv allure-$ALLURE_VERSION /opt/allure
         # Check if Allure is installed
         ls -la /opt/allure/bin
-        # Add Allure to PATH for the current shell session
+        # Make sure the Allure binary is executable
+        sudo chmod +x /opt/allure/bin/allure
+        # Add Allure to PATH
         echo "/opt/allure/bin" >> $GITHUB_PATH
-        # Confirm PATH variable
-        echo "Current PATH: $PATH"
+        # Check if Allure is accessible
+        source $GITHUB_ENV
+        echo "Allure version:"
         allure --version  # Check if allure is accessible
 
     # Ensure Allure report generation step always runs
