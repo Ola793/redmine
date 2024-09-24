@@ -77,7 +77,5 @@ test.describe("Register check", async () => {
     await expect(loginPage.flashNotice).toBeVisible();
     await expect(loginPage.flashNotice)
           .toHaveText(`Account was successfully created. An email containing the instructions to activate your account was sent to ${email}.`);
-    
-    await page.waitForTimeout(10000);
   });
 });
