@@ -36,9 +36,10 @@ jobs:
         ALLURE_VERSION=2.20.1
         curl -o allure-$ALLURE_VERSION.tgz -L https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
         tar -zxvf allure-$ALLURE_VERSION.tgz
-        mv allure-$ALLURE_VERSION /opt/allure
-        # Add Allure to PATH
-        echo "/opt/allure/bin" >> $GITHUB_PATH
+        sudo mv allure-$ALLURE_VERSION /opt/allure
+        # Add Allure to PATH using sudo for current shell
+        echo "export PATH=\$PATH:/opt/allure/bin" | sudo tee -a /etc/profile
+        source /etc/profile
         allure --version  # Check if allure is accessible
 
     # Ensure Allure report generation step always runs
