@@ -30,14 +30,13 @@ jobs:
       run: npm test
       continue-on-error: true
 
-    # Allure Installation (same as before)
+    # Allure Installation
     - name: Install Allure
       run: |
         ALLURE_VERSION=2.20.1
         curl -o allure-$ALLURE_VERSION.tgz -L https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
         tar -zxvf allure-$ALLURE_VERSION.tgz
         sudo mv allure-$ALLURE_VERSION /opt/allure
-        ls -la /opt/allure/bin
         sudo chmod +x /opt/allure/bin/allure
         echo "/opt/allure/bin" >> $GITHUB_PATH
       shell: /usr/bin/bash -e {0}
@@ -51,19 +50,15 @@ jobs:
         else
           echo "Cannot generate report, allure-results not found."
         fi
-      env:
-        LOGIN: ${{ secrets.LOGIN }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-        EMAIL: ${{ secrets.EMAIL }}
 
-    # Ensure Allure report is generated and check allure-results directory
-    - name: Check Allure Results Directory
+    # Debug step to check the allure-report directory before the Git command
+    - name: Debug Allure Report Directory
       run: |
-        if [ -d allure-results ]; then
-          echo "allure-results exists. Listing contents:"
-          ls -la allure-results
+        if [ -d allure-report ]; then
+          echo "allure-report directory exists. Listing contents:"
+          ls -la allure-report
         else
-          echo "allure-results does not exist."
+          echo "allure-report directory not found!"
         fi
 
     - name: Checkout gh-pages branch
@@ -74,28 +69,33 @@ jobs:
     # Copy the Allure report to the gh-pages branch
     - name: Copy Allure Report to gh-pages
       run: |
-        echo "Copying Allure report to gh-pages branch..."
         if [ -d allure-report ]; then
           mkdir -p ./allure-report/
           cp -r allure-report/* ./allure-report/ || echo "No allure report generated to copy."
         else
-          echo "No allure-report directory found."
+          echo "No allure-report directory found to copy."
         fi
 
-    # Debug step to list contents of allure-report
-    - name: Debug List Allure Report
-      run: ls -la allure-report || echo "allure-report directory does not exist."
+    # List contents of allure-report before git commit
+    - name: Debug List Allure Report Before Commit
+      run: |
+        echo "Listing contents of allure-report before commit:"
+        ls -la allure-report || echo "allure-report directory does not exist."
 
     # Commit and push the report to the gh-pages branch
     - name: Commit and Push Allure Report
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git add allure-report/
-        git commit -m "Update Allure report" || echo "No changes to commit"
-        git push origin gh-pages
+        if [ -d allure-report ]; then
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add allure-report/
+          git commit -m "Update Allure report" || echo "No changes to commit"
+          git push origin gh-pages
+        else
+          echo "No allure-report directory to commit."
+        fi
 
     - name: Confirm GitHub Pages Setup
       run: echo "GitHub Pages is set up on the 'gh-pages' branch."
