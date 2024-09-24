@@ -28,6 +28,10 @@ jobs:
 
     - name: Run Playwright tests
       run: npm test
+      env:
+        LOGIN: ${{ secrets.LOGIN }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        EMAIL: ${{ secrets.EMAIL }}
       continue-on-error: true
 
     # Allure Installation
