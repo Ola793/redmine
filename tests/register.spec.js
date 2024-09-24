@@ -5,7 +5,7 @@ import { LoginPage } from "./pages/login.page";
 import { RegisterPage } from "./pages/register.page";
 import randomizer from "./helpers/randomizer.js";
 
-test.describe.only("Register check", async () => {
+test.describe("Register check", async () => {
   let homePage;
   let loginPage;
   let registerPage;
