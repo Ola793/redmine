@@ -47,11 +47,8 @@ test.describe("Sign out check", async () => {
   });
 
   test("should log out", async () => {
-    await test.step("should log out", async () => {
-      await expect(homePage.signOutLink).toBeVisible();
-      await homePage.signOutLink.click();
-
-      await expect(homePage.signInLink).toBeVisible();
-    });
+    await expect(homePage.signOutLink).toBeVisible();
+    await homePage.signOutLink.click();
+    await expect(homePage.signInLink).toBeVisible();
   });
 });
