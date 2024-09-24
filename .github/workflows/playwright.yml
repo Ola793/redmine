@@ -37,16 +37,13 @@ jobs:
         curl -o allure-$ALLURE_VERSION.tgz -L https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
         tar -zxvf allure-$ALLURE_VERSION.tgz
         sudo mv allure-$ALLURE_VERSION /opt/allure
-        # Check if Allure is installed
-        ls -la /opt/allure/bin
         # Make sure the Allure binary is executable
         sudo chmod +x /opt/allure/bin/allure
         # Add Allure to PATH
         echo "/opt/allure/bin" >> $GITHUB_PATH
         # Check if Allure is accessible
-        source $GITHUB_ENV
         echo "Allure version:"
-        allure --version  # Check if allure is accessible
+        /opt/allure/bin/allure --version  # Use full path for immediate access
 
     # Ensure Allure report generation step always runs
     - name: Check allure-results Directory
@@ -63,7 +60,7 @@ jobs:
       run: |
         echo "Generating Allure report..."
         if [ -d allure-results ]; then
-          allure generate allure-results --clean -o allure-report
+          /opt/allure/bin/allure generate allure-results --clean -o allure-report
         else
           echo "Cannot generate report, allure-results not found."
         fi
