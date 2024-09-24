@@ -61,11 +61,16 @@ jobs:
       with:
         ref: gh-pages
 
+    # Conditional copying and deleting of allure report directory
     - name: Copy Allure Report to gh-pages branch
       if: always()
       run: |
-        rm -rf ./allure-report/*
-        cp -r allure-report/* ./allure-report/
+        if [ -d allure-report ]; then
+          rm -rf ./allure-report/*
+        else
+          mkdir allure-report
+        fi
+        cp -r allure-report/* ./allure-report/ || echo "No allure report generated to copy."
 
     - name: Commit and Push Allure Report
       if: always()
