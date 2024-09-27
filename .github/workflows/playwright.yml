@@ -77,13 +77,7 @@ jobs:
 
     # Save Allure History for Trend Data
     - name: Save Allure History as Artifact
-      run: |
-        if [ -d allure-results/history ]; then
-          echo "Saving Allure history as artifact..."
-        else
-          echo "No Allure history found, creating an empty folder to save..."
-          mkdir -p allure-results/history
-        fi
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: allure-history
