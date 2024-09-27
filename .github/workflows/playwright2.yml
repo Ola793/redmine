@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: lts/*
     
     - name: Install dependencies
       run: npm ci
@@ -39,14 +39,14 @@ jobs:
         path: test-results/
 
     - name: Upload Test Results to Allure Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: allure-test-results
         path: allure-report/
 
     - name: Get Allure history
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       if: always()
       continue-on-error: true
       with:
