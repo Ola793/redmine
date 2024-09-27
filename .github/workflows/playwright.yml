@@ -51,9 +51,9 @@ jobs:
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true  # Continue even if no artifact is found (first run)
+      continue-on-error: true  # Allow it to continue if no artifact found
 
-    # Ensure history folder exists
+    # Ensure history folder exists, even if empty
     - name: Ensure Allure History Directory Exists
       run: |
         mkdir -p allure-results/history
@@ -67,6 +67,12 @@ jobs:
         else
           echo "Cannot generate report, allure-results not found."
         fi
+
+    # Debug Allure History Folder
+    - name: Debug Allure History Folder
+      run: |
+        echo "Listing contents of allure-results/history:"
+        ls -la allure-results/history || echo "allure-results/history does not exist."
 
     # Save Allure report as artifact to avoid loss during branch switching
     - name: Save Allure Report as Artifact
@@ -82,6 +88,8 @@ jobs:
       with:
         name: allure-history
         path: allure-results/history
+        if-no-files-found: warn  # Don't fail if no history files found
+        include-hidden-files: false  # Exclude hidden files like .DS_Store or similar
 
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
