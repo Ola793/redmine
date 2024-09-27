@@ -1,4 +1,3 @@
-# Your existing configuration
 name: Playwright Tests
 permissions:
   contents: write
@@ -52,9 +51,9 @@ jobs:
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true  # Allow the step to continue even if the artifact is not found
+      continue-on-error: true  # Continue even if no artifact is found (first run)
 
-    # Create history folder if it does not exist
+    # Ensure history folder exists
     - name: Ensure Allure History Directory Exists
       run: |
         mkdir -p allure-results/history
@@ -78,6 +77,13 @@ jobs:
 
     # Save Allure History for Trend Data
     - name: Save Allure History as Artifact
+      run: |
+        if [ -d allure-results/history ]; then
+          echo "Saving Allure history as artifact..."
+        else
+          echo "No Allure history found, creating an empty folder to save..."
+          mkdir -p allure-results/history
+        fi
       uses: actions/upload-artifact@v3
       with:
         name: allure-history
