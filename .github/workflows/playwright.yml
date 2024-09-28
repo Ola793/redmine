@@ -138,8 +138,9 @@ jobs:
           git push origin gh-pages
         else
           echo "No allure-report directory to commit."
-      fi
+        fi  # This closes the 'if' block correctly
 
     # Step 18: Confirm GitHub Pages Setup
     - name: Confirm GitHub Pages Setup
       run: echo "GitHub Pages is set up on the 'gh-pages' branch."
+
