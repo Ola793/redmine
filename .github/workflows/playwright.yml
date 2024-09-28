@@ -14,18 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout repository
     - uses: actions/checkout@v4
 
+    # Step 2: Setup Node.js environment
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
 
+    # Step 3: Install dependencies
     - name: Install dependencies
       run: npm ci
 
+    # Step 4: Install Playwright browsers
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    # Step 5: Run Playwright tests
     - name: Run Playwright tests
       run: npm test
       env:
@@ -34,7 +39,7 @@ jobs:
         EMAIL: ${{ secrets.EMAIL }}
       continue-on-error: true
 
-    # Allure Installation
+    # Step 6: Install Allure
     - name: Install Allure
       run: |
         ALLURE_VERSION=2.20.1
@@ -45,20 +50,19 @@ jobs:
         echo "/opt/allure/bin" >> $GITHUB_PATH
       shell: /usr/bin/bash -e {0}
 
-    # Restore Allure History (if exists)
+    # Step 7: Ensure allure-results/history directory exists before generating the report
+    - name: Ensure Allure History Directory
+      run: mkdir -p allure-results/history
+
+    # Step 8: Restore Allure History (if exists)
     - name: Download Allure History Artifact
-      uses: actions/download-artifact@v4  # Updated to v4
+      uses: actions/download-artifact@v4  # Updated to v4 for Node.js 20 compatibility
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true
+      continue-on-error: true  # Continue even if history is missing
 
-    # Ensure history folder exists
-    - name: Ensure Allure History Directory Exists
-      run: |
-        mkdir -p allure-results/history
-
-    # Generate Allure Report with History
+    # Step 9: Generate Allure Report with History
     - name: Generate Allure Report
       run: |
         echo "Generating Allure report..."
@@ -68,41 +72,42 @@ jobs:
           echo "Cannot generate report, allure-results not found."
         fi
 
-    # Debug: Check Allure History after Test Execution
-    - name: Debug Allure Results
+    # Step 10: Debug: Check Allure History after Test Execution
+    - name: Debug Allure History Directory
       run: |
-        echo "Listing contents of allure-results:"
-        ls -la allure-results || echo "allure-results directory does not exist."
+        echo "Listing contents of allure-results/history:"
+        ls -la allure-results/history || echo "allure-results/history directory does not exist."
 
-    # Save Allure report as artifact to avoid loss during branch switching
+    # Step 11: Save Allure report as artifact to avoid loss during branch switching
     - name: Save Allure Report as Artifact
-      uses: actions/upload-artifact@v4  # Updated to v4
+      uses: actions/upload-artifact@v4  # Updated to v4 for Node.js 20 compatibility
       with:
         name: allure-report
         path: allure-report
 
-    # Save Allure History for Trend Data
+    # Step 12: Save Allure History for Trend Data
     - name: Save Allure History as Artifact
       if: always()
       uses: actions/upload-artifact@v4  # Updated to v4
       with:
         name: allure-history
         path: allure-results/history
-        if-no-files-found: warn
+        if-no-files-found: warn  # Warn but don't fail if no history files are found
 
+    # Step 13: Checkout gh-pages branch
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    # Restore the Allure report from artifact
+    # Step 14: Restore the Allure report from artifact
     - name: Download Allure Report Artifact
-      uses: actions/download-artifact@v4  # Updated to v4
+      uses: actions/download-artifact@v4  # Updated to v4 for Node.js 20 compatibility
       with:
         name: allure-report
         path: ./allure-report
 
-    # Copy the Allure report to the gh-pages branch
+    # Step 15: Copy the Allure report to the gh-pages branch
     - name: Copy Allure Report to gh-pages
       run: |
         if [ -d allure-report ]; then
@@ -112,13 +117,13 @@ jobs:
           echo "No allure-report directory found to copy."
         fi
 
-    # List contents of allure-report before git commit
+    # Step 16: List contents of allure-report before git commit
     - name: Debug List Allure Report Before Commit
       run: |
         echo "Listing contents of allure-report before commit:"
         ls -la allure-report || echo "allure-report directory does not exist."
 
-    # Commit and push the report to the gh-pages branch
+    # Step 17: Commit and push the report to the gh-pages branch
     - name: Commit and Push Allure Report
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -131,7 +136,7 @@ jobs:
           git push origin gh-pages
         else
           echo "No allure-report directory to commit."
-        fi
 
+    # Step 18: Confirm GitHub Pages Setup
     - name: Confirm GitHub Pages Setup
       run: echo "GitHub Pages is set up on the 'gh-pages' branch."
