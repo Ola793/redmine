@@ -62,7 +62,7 @@ jobs:
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true  # Continue even if history is missing
+      continue-on-error: true  # Continue if no allure-history is found (initial run)
 
     # Step 9: Generate Allure Report with History
     - name: Generate Allure Report
@@ -138,9 +138,8 @@ jobs:
           git push origin gh-pages
         else
           echo "No allure-report directory to commit."
-        fi  # This closes the 'if' block correctly
+        fi
 
     # Step 18: Confirm GitHub Pages Setup
     - name: Confirm GitHub Pages Setup
       run: echo "GitHub Pages is set up on the 'gh-pages' branch."
-
