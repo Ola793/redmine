@@ -47,13 +47,13 @@ jobs:
 
     # Restore Allure History (if exists)
     - name: Download Allure History Artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4  # Updated to v4
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true  # Allow it to continue if no artifact found
+      continue-on-error: true
 
-    # Ensure history folder exists, even if empty
+    # Ensure history folder exists
     - name: Ensure Allure History Directory Exists
       run: |
         mkdir -p allure-results/history
@@ -68,15 +68,15 @@ jobs:
           echo "Cannot generate report, allure-results not found."
         fi
 
-    # Debug Allure History Folder
-    - name: Debug Allure History Folder
+    # Debug: Check Allure History after Test Execution
+    - name: Debug Allure Results
       run: |
-        echo "Listing contents of allure-results/history:"
-        ls -la allure-results/history || echo "allure-results/history does not exist."
+        echo "Listing contents of allure-results:"
+        ls -la allure-results || echo "allure-results directory does not exist."
 
     # Save Allure report as artifact to avoid loss during branch switching
     - name: Save Allure Report as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # Updated to v4
       with:
         name: allure-report
         path: allure-report
@@ -84,12 +84,11 @@ jobs:
     # Save Allure History for Trend Data
     - name: Save Allure History as Artifact
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # Updated to v4
       with:
         name: allure-history
         path: allure-results/history
-        if-no-files-found: warn  # Don't fail if no history files found
-        include-hidden-files: false  # Exclude hidden files like .DS_Store or similar
+        if-no-files-found: warn
 
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
@@ -98,7 +97,7 @@ jobs:
 
     # Restore the Allure report from artifact
     - name: Download Allure Report Artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4  # Updated to v4
       with:
         name: allure-report
         path: ./allure-report
