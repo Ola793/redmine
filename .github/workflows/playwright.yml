@@ -1,6 +1,8 @@
 name: Playwright Tests
+
 permissions:
   contents: write
+
 on:
   push:
     branches: [ main, master ]
@@ -56,7 +58,7 @@ jobs:
 
     # Step 8: Restore Allure History (if exists)
     - name: Download Allure History Artifact
-      uses: actions/download-artifact@v4  # Updated to v4 for Node.js 20 compatibility
+      uses: actions/download-artifact@v4
       with:
         name: allure-history
         path: allure-results/history
@@ -80,7 +82,7 @@ jobs:
 
     # Step 11: Save Allure report as artifact to avoid loss during branch switching
     - name: Save Allure Report as Artifact
-      uses: actions/upload-artifact@v4  # Updated to v4 for Node.js 20 compatibility
+      uses: actions/upload-artifact@v4
       with:
         name: allure-report
         path: allure-report
@@ -88,7 +90,7 @@ jobs:
     # Step 12: Save Allure History for Trend Data
     - name: Save Allure History as Artifact
       if: always()
-      uses: actions/upload-artifact@v4  # Updated to v4
+      uses: actions/upload-artifact@v4
       with:
         name: allure-history
         path: allure-results/history
@@ -102,7 +104,7 @@ jobs:
 
     # Step 14: Restore the Allure report from artifact
     - name: Download Allure Report Artifact
-      uses: actions/download-artifact@v4  # Updated to v4 for Node.js 20 compatibility
+      uses: actions/download-artifact@v4
       with:
         name: allure-report
         path: ./allure-report
@@ -124,20 +126,19 @@ jobs:
         ls -la allure-report || echo "allure-report directory does not exist."
 
     # Step 17: Commit and push the report to the gh-pages branch
-    # Commit and push the report to the gh-pages branch
     - name: Commit and Push Allure Report
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    run: |
-      if [ -d allure-report ]; then
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git add allure-report/
-        git commit -m "Update Allure report" || echo "No changes to commit"
-        git push origin gh-pages
-      else
-        echo "No allure-report directory to commit."
-      fi  # <-- This closes the 'if' block correctly
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if [ -d allure-report ]; then
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add allure-report/
+          git commit -m "Update Allure report" || echo "No changes to commit"
+          git push origin gh-pages
+        else
+          echo "No allure-report directory to commit."
+      fi
 
     # Step 18: Confirm GitHub Pages Setup
     - name: Confirm GitHub Pages Setup
