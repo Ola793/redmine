@@ -32,17 +32,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Download Allure History (if available)
       - name: Download Allure History Artifact
-        if: always()  # Ensure the step runs regardless of previous step outcomes
+        if: always()  # This ensures the step runs regardless of previous step outcomes
         uses: actions/download-artifact@v4
         with:
           name: allure-history
           path: allure-results/history
           merge-multiple: false
-          repository: ***/redmine
-          run-id: 11095960833
-        continue-on-error: true  # This must be outside the `with` block
+        continue-on-error: true  # This is outside the `with` block
+      
 
       # Step 6: Run Playwright tests
       - name: Run Playwright tests
