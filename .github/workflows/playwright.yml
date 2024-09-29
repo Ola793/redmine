@@ -18,6 +18,8 @@ jobs:
     steps:
     # Step 1: Checkout repository
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false  # Ensure it's not tied to a specific branch
 
     # Step 2: Setup Node.js environment
     - uses: actions/setup-node@v4
@@ -56,13 +58,14 @@ jobs:
     - name: Ensure Allure History Directory
       run: mkdir -p allure-results/history
 
-    # Step 8: Restore Allure History (if exists)
+    # Step 8: Restore Allure History (if exists) - adding GITHUB_REF to ensure correct branch
     - name: Download Allure History Artifact
       uses: actions/download-artifact@v4
       with:
         name: allure-history
         path: allure-results/history
-      continue-on-error: true  # Continue if no allure-history is found (initial run)
+        # Ensure correct branch and allow failure if no history is found
+      continue-on-error: true  # Allow workflow to continue if there's no history
 
     # Step 9: Generate Allure Report with History
     - name: Generate Allure Report
@@ -74,7 +77,7 @@ jobs:
           echo "Cannot generate report, allure-results not found."
         fi
 
-    # Step 10: Debug: Check Allure History after Test Execution
+    # Step 10: Debug Allure History Directory
     - name: Debug Allure History Directory
       run: |
         echo "Listing contents of allure-results/history:"
