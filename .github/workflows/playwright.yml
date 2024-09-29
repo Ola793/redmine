@@ -34,12 +34,16 @@ jobs:
 
       # Step 5: Download Allure History (if it exists)
       - name: Download Allure History Artifact
-        if: always()
+        if: always()  # This will ensure the step runs even if the previous steps fail
         uses: actions/download-artifact@v4
         with:
           name: allure-history
           path: allure-results/history
-          continue-on-error: true
+          merge-multiple: false
+          repository: ***/redmine
+          run-id: 11095960833
+        continue-on-error: true  # Moved to the step level, not inside `with`
+    
 
       # Step 6: Run Playwright tests
       - name: Run Playwright tests
