@@ -114,13 +114,19 @@ jobs:
         ls -la allure-report || echo "allure-report directory does not exist."
 
     # Commit and push the report to the gh-pages branch
-    - name: Deploy report to Github Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages
-        publish_dir: allure-history
+    - name: Commit and Push Allure Report
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if [ -d allure-report ]; then
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add allure-report/
+          git commit -m "Update Allure report" || echo "No changes to commit"
+          git push origin gh-pages
+        else
+          echo "No allure-report directory to commit."
+        fi
 
     - name: Confirm GitHub Pages Setup
       run: echo "GitHub Pages is set up on the 'gh-pages' branch."
