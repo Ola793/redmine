@@ -19,6 +19,12 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+    
+    - name: Download Allure History
+      run: |
+      if [ -d allure-results/history ]; then
+        cp -r allure-results/history allure-history
+      fi
 
     - name: Install dependencies
       run: npm ci
@@ -66,6 +72,13 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: gh-pages
+    
+     # Save the history for future runs
+     - name: Save Allure History
+     run: |
+       mkdir -p allure-results/history
+       cp -r allure-results/history allure-history
+     if: success()
 
     # Restore the Allure report from artifact
     - name: Download Allure Report Artifact
