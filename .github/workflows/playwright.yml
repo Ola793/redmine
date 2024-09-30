@@ -70,14 +70,15 @@ jobs:
         name: allure-report
         path: allure-report
 
-    # Upload Allure history to maintain trends
-    - name: Save Allure History as Artifact
-      if: always() # Run this even if tests fail to ensure history is saved
+    # Save Allure history to maintain trends
+    - name: Copy Allure History
       run: |
         if [ -d allure-results/history ]; then
           mkdir -p allure-history
           cp -r allure-results/history allure-history
         fi
+
+    - name: Upload Allure History Artifact
       uses: actions/upload-artifact@v3
       with:
         name: allure-history
