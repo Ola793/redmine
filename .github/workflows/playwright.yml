@@ -31,7 +31,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: allure-history
-        path: allure-results/history
+        path: allure-report/history
       continue-on-error: true
 
     - name: Run Playwright tests
