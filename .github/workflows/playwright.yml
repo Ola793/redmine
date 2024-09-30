@@ -44,13 +44,6 @@ jobs:
         sudo chmod +x /opt/allure/bin/allure
         echo "/opt/allure/bin" >> $GITHUB_PATH
       shell: /usr/bin/bash -e {0}
-    
-    # Download Allure History
-    - name: Download Allure History
-      run: |
-      if [ -d allure-results/history ]; then
-        cp -r allure-results/history allure-history
-      fi
 
     # Generate Allure Report
     - name: Generate Allure Report
@@ -73,13 +66,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: gh-pages
-    
-     # Save the history for future runs
-     - name: Save Allure History
-     run: |
-       mkdir -p allure-results/history
-       cp -r allure-results/history allure-history
-     if: success()
 
     # Restore the Allure report from artifact
     - name: Download Allure Report Artifact
