@@ -26,6 +26,14 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    # Download previous Allure history to preserve trends
+    - name: Download Allure History
+      uses: actions/download-artifact@v3
+      with:
+        name: allure-history
+        path: allure-results/history
+      continue-on-error: true
+
     - name: Run Playwright tests
       run: npm test
       env:
@@ -55,19 +63,32 @@ jobs:
           echo "Cannot generate report, allure-results not found."
         fi
 
-    # Save Allure report as artifact to avoid loss during branch switching
+    # Save Allure report as artifact
     - name: Save Allure Report as Artifact
       uses: actions/upload-artifact@v3
       with:
         name: allure-report
         path: allure-report
 
+    # Upload Allure history to maintain trends
+    - name: Save Allure History as Artifact
+      if: always() # Run this even if tests fail to ensure history is saved
+      run: |
+        if [ -d allure-results/history ]; then
+          mkdir -p allure-history
+          cp -r allure-results/history allure-history
+        fi
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-history
+        path: allure-history
+
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    # Restore the Allure report from artifact
+    # Download Allure Report Artifact
     - name: Download Allure Report Artifact
       uses: actions/download-artifact@v3
       with:
