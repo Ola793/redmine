@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",  "scripts": {
     "test": "npx playwright test",
-    "gen:report": "allure generate allure-results --clean -o allure-report",
+    "allure-report": "allure generate allure-results --clean -o allure-report",
     "open:report": "allure open allure-report",
     "test:report": "npm test && npm run gen:report && npm run open:report"
   },
