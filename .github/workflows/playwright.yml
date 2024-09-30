@@ -27,12 +27,13 @@ jobs:
       run: npx playwright install --with-deps
 
     # Download previous Allure history to preserve trends
-    - name: Download Allure History
-      uses: actions/download-artifact@v3
-      with:
-        name: allure-history
-        path: allure-report/history
+    - name: Get Allure history
+      uses: actions/checkout@v3
+      if: always()
       continue-on-error: true
+      with:
+        ref: gh-pages
+        path: gh-pages
 
     - name: Run Playwright tests
       run: npm test
