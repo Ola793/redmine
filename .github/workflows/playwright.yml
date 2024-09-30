@@ -26,6 +26,16 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    # Reinstall Allure CLI globally
+    - name: Install Allure CLI
+      run: |
+        ALLURE_VERSION=2.20.1
+        curl -o allure-$ALLURE_VERSION.tgz -L https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
+        tar -zxvf allure-$ALLURE_VERSION.tgz
+        sudo mv allure-$ALLURE_VERSION /opt/allure
+        sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure  # Ensure Allure is globally available
+      shell: /usr/bin/bash -e {0}
+
     # Run Playwright tests
     - name: Run Playwright tests
       run: npx playwright test
@@ -38,9 +48,9 @@ jobs:
     # Generate Allure Report
     - name: Generate Allure Report
       if: always()
-      run: npm run gen:report
+      run: npm run gen:report  # Use your actual script name for generating the report
 
-    # Upload Playwright test results as artifact (optional, if needed)
+    # Upload Playwright test results as artifact (optional)
     - uses: actions/upload-artifact@v3
       if: always()
       with:
@@ -63,7 +73,7 @@ jobs:
       with:
         allure_results: allure-results
         allure_history: gh-pages/allure-history  # Reuse history from gh-pages
-        keep_reports: 20  # Keep the last 20 reports for trend analysis
+        keep_reports: 20
 
     # Deploy Allure report with history to GitHub Pages
     - name: Deploy report to GitHub Pages
