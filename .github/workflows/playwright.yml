@@ -45,14 +45,7 @@ jobs:
         echo "/opt/allure/bin" >> $GITHUB_PATH
       shell: /usr/bin/bash -e {0}
 
-    # Restore Allure History (if exists)
-    - name: Download Allure History Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: allure-history
-        path: allure-results/history
-
-    # Generate Allure Report with History
+    # Generate Allure Report
     - name: Generate Allure Report
       run: |
         echo "Generating Allure report..."
@@ -68,13 +61,6 @@ jobs:
       with:
         name: allure-report
         path: allure-report
-
-    # Save Allure History for Trend Data
-    - name: Save Allure History as Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: allure-history
-        path: allure-results/history
 
     - name: Checkout gh-pages branch
       uses: actions/checkout@v4
