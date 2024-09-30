@@ -38,7 +38,7 @@ jobs:
     # Generate Allure Report
     - name: Generate Allure Report
       if: always()
-      run: npm run allure-report
+      run: npm run gen:report
 
     # Upload Playwright test results as artifact (optional, if needed)
     - uses: actions/upload-artifact@v3
